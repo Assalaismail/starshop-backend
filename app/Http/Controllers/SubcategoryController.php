@@ -60,7 +60,6 @@ class SubcategoryController extends ApiController
    }
 
 
-
        //add new category
     public function addSubCategory(Request $request)
     {
@@ -90,8 +89,43 @@ class SubcategoryController extends ApiController
 
         return response()->json([
             'message' => 'DONE! SubCategory Created Successfully',
+            'SubCategory' => $category,
         ]);
     }
+
+
+      //delete subCategory
+      public function deleteSubCategory(Request $request, $id){
+        $sub = subcategory::find($id);
+        if (!$sub) {
+            return response()->json(['message' => 'SubCategory not found.'], 404);
+        }
+        $sub->delete();
+
+        return response()->json([
+            'message' => 'DONE! SubCategory deleted'
+        ]);
+
+    }
+
+        //update subCategory
+        public function updateSubCategory(Request $request, $id)
+        {
+            $sub = subcategory::find($id);
+            $sub->fill($request->only([
+                'name',
+                'slug',
+                'abbreviation',
+                'status',
+                'category_id',
+            ]));
+
+            $sub->save();
+
+            return response()->json([
+                'message' => 'DONE! SubCategory updated',
+            ]);
+        }
 
 
 
