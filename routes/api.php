@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserswebController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\SubcategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,9 @@ Route::get('/category', [CategoriesController::class, 'getAllCategories']);
 Route::get('/category/{id}', [CategoriesController::class, 'getCategoryById']);
 Route::post('/category',[CategoriesController::class,'addCategory']);
 
+///////////  SubCategories ///////////
+Route::get('/subcategory', [SubcategoryController::class, 'getAllSubCategories']);
+Route::get('/subcategory/{category_id}', [SubcategoryController::class, 'getSubByCategoryId']);
+Route::get('/subcategoryname/{categoryName}', [SubcategoryController::class, 'getSubByCategoryName']);
+Route::post('/subcategory', [SubcategoryController::class, 'addSubCategory']);
 

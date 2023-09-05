@@ -18,6 +18,7 @@ class CategoriesController extends ApiController
             $collection[] = [
                 'id' => $category->id,
                 'name' => $category->name,
+                'slug' => $category->slug,
                 'image' => $category->image,
             ];
         }
@@ -40,10 +41,13 @@ class CategoriesController extends ApiController
 
         $request->validate([
             'name' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+            'slug' => 'required',
+            // 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
         ]);
 
         $name = $request->input('name');
+        $slug = $request->input('slug');
+
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -53,6 +57,7 @@ class CategoriesController extends ApiController
         }
 
         $category->name = $name;
+        $category->slug = $slug;
         $category->save();
 
         return response()->json([
