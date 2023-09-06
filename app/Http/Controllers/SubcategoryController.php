@@ -39,7 +39,9 @@ class SubcategoryController extends ApiController
         return $this->apiResponse(null, self::STATUS_NOT_FOUND, __('Category not found.'));
     }
 
-    $subcategories = Subcategory::where('category_id', $category_id)->get();
+    $subcategories = Subcategory::where('category_id', $category_id)
+    ->where('status', 'published')
+    ->get();
 
     return $this->apiResponse($subcategories, self::STATUS_OK, __('Response ok!'));
     }
@@ -54,7 +56,9 @@ class SubcategoryController extends ApiController
         return $this->apiResponse(null, self::STATUS_NOT_FOUND, __('Category not found.'));
     }
     // Retrieve subcategories associated with the found category
-    $subcategories = Subcategory::where('category_id', $category->id)->get();
+    $subcategories = Subcategory::where('category_id', $category->id)
+    ->where('status', 'published')
+    ->get();
 
     return $this->apiResponse($subcategories, self::STATUS_OK, __('Response ok!'));
    }
@@ -105,7 +109,6 @@ class SubcategoryController extends ApiController
         return response()->json([
             'message' => 'DONE! SubCategory deleted'
         ]);
-
     }
 
         //update subCategory

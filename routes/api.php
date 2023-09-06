@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserswebController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\SetAttributesController;
+use App\Http\Controllers\AttributesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,3 +49,13 @@ Route::post('/subcategory', [SubcategoryController::class, 'addSubCategory']);
 Route::delete('/subcategory/{id}', [SubcategoryController::class, 'deleteSubCategory']);
 Route::put('/subcategory/{id}', [SubcategoryController::class, 'updateSubCategory']);
 
+///////////  SetAttributes ///////////
+Route::get('/set', [SetAttributesController::class, 'getAllSetAttributes']);
+Route::post('/set', [SetAttributesController::class, 'addSetAttributes']);
+Route::put('/set/{id}', [SetAttributesController::class, 'updateSetAttributes']);
+
+///////////  Attributes ///////////
+Route::get('/attribute', [AttributesController::class, 'getAllAttributes']);
+Route::get('/attribute/{setattributes_id}', [AttributesController::class, 'getAttributeBySetAttributeId']);
+Route::post('/attribute', [AttributesController::class, 'addAttributes']);
+Route::put('/attribute', [AttributesController::class, 'updateAttributes']);
