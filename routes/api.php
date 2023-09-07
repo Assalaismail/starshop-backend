@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\SetAttributesController;
 use App\Http\Controllers\AttributesController;
+use App\Http\Controllers\CarouselController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,3 +60,10 @@ Route::get('/attribute', [AttributesController::class, 'getAllAttributes']);
 Route::get('/attribute/{setattributes_id}', [AttributesController::class, 'getAttributeBySetAttributeId']);
 Route::post('/attribute', [AttributesController::class, 'addAttributes']);
 Route::put('/attribute', [AttributesController::class, 'updateAttributes']);
+
+
+///////////  Carousel ///////////
+Route::get('/carousel', [CarouselController::class, 'getAllCarousel']);
+Route::post('/carousel', [CarouselController::class, 'addImage']);
+Route::put('/carousel/{id}', [CarouselController::class, 'updateImage']);
+Route::delete('/carousel/{id}', [CarouselController::class, 'deleteCarousel']);
