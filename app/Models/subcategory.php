@@ -14,6 +14,7 @@ class subcategory extends Model
         'slug',
         'abbreviation',
         'status',
+        'image',
         'category_id',
     ];
 

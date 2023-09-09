@@ -64,6 +64,17 @@ class SubcategoryController extends ApiController
    }
 
 
+   public function getSubCategoriesToTheHomePage()
+   {
+       $productNames = ['Dress', 'Top', 'Jumpsuit', 'Set', 'Skirt', 'Pants'];
+
+       $products = Subcategory::whereIn('name', $productNames)->get();
+
+       return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
+
+   }
+
+
        //add new category
     public function addSubCategory(Request $request)
     {
@@ -75,7 +86,25 @@ class SubcategoryController extends ApiController
             'abbreviation' => 'required',
             'status' => 'required',
             'category_id' => 'required',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+
         ]);
+
+        if ($request->hasFile('image')) {
+            // Get the uploaded image from the request
+        $image = $request->file('image');
+
+        // Generate a unique name for the image
+        $imageName = $image->getClientOriginalName();
+
+        // Upload the image to the storage folder (public disk)
+        $imagePath = $image->storeAs('public/subcategories', $imageName);
+
+        // Generate the URL for the image
+        $imageUrl = asset('storage/subcategories/' . $imageName);
+        $category->image = $imageUrl; // Store the image URL, not the path
+
+     }
 
         $name = $request->input('name');
         $slug = $request->input('slug');

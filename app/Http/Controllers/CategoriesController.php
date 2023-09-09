@@ -42,22 +42,32 @@ class CategoriesController extends ApiController
         $request->validate([
             'name' => 'required',
             'slug' => 'required',
-            // 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
         ]);
 
         $name = $request->input('name');
         $slug = $request->input('slug');
 
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('category_images'), $imageName);
-            $category->image_url = asset('category_images/' . $imageName); // Store the image URL
-        }
+ if ($request->hasFile('image')) {
+        // Get the uploaded image from the request
+    $image = $request->file('image');
+
+    // Generate a unique name for the image
+    $imageName = $image->getClientOriginalName();
+
+    // Upload the image to the storage folder (public disk)
+    $imagePath = $image->storeAs('public/categories', $imageName);
+
+    // Generate the URL for the image
+    $imageUrl = asset('storage/categories/' . $imageName);
+    $category->image = $imageUrl; // Store the image URL, not the path
+
+ }
 
         $category->name = $name;
         $category->slug = $slug;
+        // $category->image = $imageUrl; // Store the image URL, not the path
         $category->save();
 
         return response()->json([

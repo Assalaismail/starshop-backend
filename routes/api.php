@@ -30,10 +30,10 @@ Route::get('/user/{id}', [UserswebController::class, 'getUserById']);
 Route::post('/user',[UserswebController::class,'addUser']);
 Route::delete('/user/{id}',[UserswebController::class,'deleteUser']);
 
-// login
+///////////  Login  ///////////
 Route::post('/login', [UserswebController::class, 'login']);
 
-// logout
+///////////  Logout  ///////////
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [UserswebController::class, 'logout']);
 });
@@ -46,6 +46,7 @@ Route::post('/category',[CategoriesController::class,'addCategory']);
 Route::get('/subcategory', [SubcategoryController::class, 'getAllSubCategories']);
 Route::get('/subcategory/{category_id}', [SubcategoryController::class, 'getSubByCategoryId']);
 Route::get('/subcategoryname/{categoryName}', [SubcategoryController::class, 'getSubByCategoryName']);
+Route::get('/subcategories', [SubcategoryController::class, 'getSubCategoriesToTheHomePage']);
 Route::post('/subcategory', [SubcategoryController::class, 'addSubCategory']);
 Route::delete('/subcategory/{id}', [SubcategoryController::class, 'deleteSubCategory']);
 Route::put('/subcategory/{id}', [SubcategoryController::class, 'updateSubCategory']);
