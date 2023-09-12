@@ -71,7 +71,16 @@ class SubcategoryController extends ApiController
        $products = Subcategory::whereIn('name', $productNames)->get();
 
        return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
+   }
 
+
+   public function getSubCategoriesTwoToTheHomePage()
+   {
+       $productNames = ['Shoes', 'Accessories', 'Suits', 'Blazers', 'Skirt', 'Pants'];
+
+       $products = Subcategory::whereIn('name', $productNames)->get();
+
+       return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
    }
 
 
