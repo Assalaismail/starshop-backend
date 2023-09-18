@@ -8,6 +8,7 @@ use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\SetAttributesController;
 use App\Http\Controllers\AttributesController;
 use App\Http\Controllers\CarouselController;
+use App\Http\Controllers\ProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,9 +46,12 @@ Route::post('/category',[CategoriesController::class,'addCategory']);
 ///////////  SubCategories ///////////
 Route::get('/subcategory', [SubcategoryController::class, 'getAllSubCategories']);
 Route::get('/subcategory/{category_id}', [SubcategoryController::class, 'getSubByCategoryId']);
+
 Route::get('/subcategoryname/{categoryName}', [SubcategoryController::class, 'getSubByCategoryName']);
+
 Route::get('/subcategories', [SubcategoryController::class, 'getSubCategoriesToTheHomePage']);
 Route::get('/subcategoriestwo', [SubcategoryController::class, 'getSubCategoriesTwoToTheHomePage']);
+
 Route::post('/subcategory', [SubcategoryController::class, 'addSubCategory']);
 Route::delete('/subcategory/{id}', [SubcategoryController::class, 'deleteSubCategory']);
 Route::put('/subcategory/{id}', [SubcategoryController::class, 'updateSubCategory']);
@@ -69,3 +73,8 @@ Route::get('/carousel', [CarouselController::class, 'getAllCarousel']);
 Route::post('/carousel', [CarouselController::class, 'addImage']);
 Route::put('/carousel/{id}', [CarouselController::class, 'updateImage']);
 Route::delete('/carousel/{id}', [CarouselController::class, 'deleteCarousel']);
+
+
+/////////// Products ///////////
+Route::get('/products', [ProductsController::class, 'getAllProducts']);
+Route::post('/products', [ProductsController::class, 'addProducts']);

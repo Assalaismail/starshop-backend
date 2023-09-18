@@ -22,8 +22,12 @@ class subcategory extends Model
         return $this->belongsTo(categories::class, 'category_id', 'id');
     }
 
-    public static function getByCategoryId($category_id)
-    {
-        return self::where('category_id', $category_id)->get();
+    // public static function getByCategoryId($category_id)
+    // {
+    //     return self::where('category_id', $category_id)->get();
+    // }
+
+    public function products(){
+        return $this->hasMany(products::class, 'subcategory_id', 'id');
     }
 }
