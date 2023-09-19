@@ -77,4 +77,6 @@ Route::delete('/carousel/{id}', [CarouselController::class, 'deleteCarousel']);
 
 /////////// Products ///////////
 Route::get('/products', [ProductsController::class, 'getAllProducts']);
+Route::get('/products/{id}', [ProductsController::class, 'getProductById']);
+Route::get('/productsname/{subcategoryName}', [ProductsController::class, 'getProductBySubCategoryName']);
 Route::post('/products', [ProductsController::class, 'addProducts']);
