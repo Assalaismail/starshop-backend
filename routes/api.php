@@ -61,6 +61,7 @@ Route::get('/set', [SetAttributesController::class, 'getAllSetAttributes']);
 Route::post('/set', [SetAttributesController::class, 'addSetAttributes']);
 Route::put('/set/{id}', [SetAttributesController::class, 'updateSetAttributes']);
 
+
 ///////////  Attributes ///////////
 Route::get('/attribute', [AttributesController::class, 'getAllAttributes']);
 Route::get('/attribute/{setattributes_id}', [AttributesController::class, 'getAttributeBySetAttributeId']);

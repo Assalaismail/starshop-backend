@@ -36,7 +36,7 @@ class ProductsController extends ApiController
        $validatedData = $request->validate([
         'name' => 'required|string|max:255',
         'slug' => 'required|string|max:255',
-        'sku' => 'required|string|max:255',
+        // 'sku' => 'required|string|max:255',
         'status' => 'required|string',
         'stock_status' => 'required|string',
 
@@ -71,12 +71,11 @@ class ProductsController extends ApiController
             $imagePaths[] = $imageUrl;
         }
     }
-
       // Create a new product with image filenames
        $product = Products::create([
           'name' => $validatedData['name'],
           'slug' => $validatedData['slug'],
-          'sku' => $validatedData['sku'],
+        //   'sku' => $validatedData['sku'],
           'status' => $validatedData['status'],
           'stock_status' => $validatedData['stock_status'],
 
@@ -88,7 +87,6 @@ class ProductsController extends ApiController
           'subcategory_id' => $validatedData['subcategory_id'],
           'subcategory_abbreviation' => $subcategory->abbreviation,
           'images' => json_encode($imagePaths),
-          // 'images' => $imagePaths,
       ]);
 
      return response()->json([

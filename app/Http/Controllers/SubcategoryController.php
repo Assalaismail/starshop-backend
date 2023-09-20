@@ -66,7 +66,7 @@ class SubcategoryController extends ApiController
 
    public function getSubCategoriesToTheHomePage()
    {
-       $productNames = ['Dress', 'Top', 'Jumpsuit', 'Set', 'Skirt', 'Pants'];
+       $productNames = ['Dresses', 'Top', 'Jumpsuit', 'Set', 'Skirt', 'Pants'];
 
        $products = Subcategory::whereIn('name', $productNames)->get();
 
