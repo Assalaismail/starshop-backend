@@ -130,4 +130,22 @@ class ProductsController extends ApiController
 
        return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
       }
+
+      public function filterByPrice(Request $request)
+      {
+
+    $minPrice = $request->input('min_price', 0); // Default to 0 if not provided
+    $maxPrice = $request->input('max_price', PHP_INT_MAX); // Default to the maximum possible value if not provided
+
+    // Query the database to retrieve products within the specified price range
+    $products = Products::where('price', '>=', $minPrice)
+        ->where('price', '<=', $maxPrice)
+        ->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No products found within the specified price range.']);
+        }
+        return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
+       }
+
 }

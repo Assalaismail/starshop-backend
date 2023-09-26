@@ -81,3 +81,6 @@ Route::get('/products', [ProductsController::class, 'getAllProducts']);
 Route::get('/products/{id}', [ProductsController::class, 'getProductById']);
 Route::get('/productsname/{subcategoryName}', [ProductsController::class, 'getProductBySubCategoryName']);
 Route::post('/products', [ProductsController::class, 'addProducts']);
+
+
+Route::get('/Products/filter', [ProductsController::class, 'filterByPrice']);

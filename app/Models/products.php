@@ -28,6 +28,9 @@ class products extends Model
         'subcategory_id',
         'subcategory_abbreviation',
         'season_code',
+        
+        'min_price',
+        'max_price',
 
     ];
 
