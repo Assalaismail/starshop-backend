@@ -28,10 +28,7 @@ class products extends Model
         'subcategory_id',
         'subcategory_abbreviation',
         'season_code',
-        
-        'min_price',
-        'max_price',
-
+        'is_variation',
     ];
 
     public function categories(){
@@ -40,6 +37,11 @@ class products extends Model
 
     public function subcategory(){
         return $this->belongsTo(subcategory::class, 'subcategory_id', 'id');
+    }
+
+    public function variations()
+    {
+        return $this->hasMany(Variation::class);
     }
 
 }

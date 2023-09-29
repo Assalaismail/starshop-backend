@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Models\products;
 use App\Models\subcategory;
+use App\Models\attributes;
 
 
 
@@ -30,25 +31,28 @@ class ProductsController extends ApiController
 
 
     //add new products
-    public function addProducts(Request $request)
-    {
-
-       $validatedData = $request->validate([
+public function addProducts(Request $request)
+{
+    $validatedData = $request->validate([
         'name' => 'required|string|max:255',
         'slug' => 'required|string|max:255',
-        // 'sku' => 'required|string|max:255',
         'status' => 'required|string',
         'stock_status' => 'required|string',
-
-        'size' => 'required|array',
-        'color' => 'required|array',
-
         'price' => 'required|numeric|min:0.01',
         'subcategory_id' => 'required|numeric|min:0.01',
-        'images.*' => 'image|mimes:jpeg,png,jpg,gif',
-      ]);
 
-       // Fetch the corresponding category_id based on the subcategory_id
+        'variations' => 'required|array',
+
+        'variations.*.color' => 'required|string',
+
+        'variations.*.size' => 'required|array',
+        'variations.*.size.*' => 'required|string',
+
+        'variations.*.images' => 'sometimes|array',
+        'variations.*.images.*' => 'image|mimes:jpeg,png,jpg,gif',
+    ]);
+
+    // Fetch the corresponding category_id based on the subcategory_id
     $subcategory = Subcategory::find($validatedData['subcategory_id']);
 
     if (!$subcategory) {
@@ -57,43 +61,51 @@ class ProductsController extends ApiController
         ], 400);
     }
 
-      // Upload and store the images
-       $imagePaths = [];
+    $products = [];
 
-       if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $imageName = $image->getClientOriginalName();
+    foreach ($validatedData['variations'] as $variation) {
+        $color = $variation['color'];
+        $sizes = $variation['size'];
 
-            $imagePath = $image->storeAs('public/products', $imageName);
+        // Upload and store the images
+        $imagePaths = [];
 
-           $imageUrl = asset('storage/products/' . $imageName);
+        if (isset($variation['images'])) {
+            foreach ($variation['images'] as $image) {
+             $imageName = $image->getClientOriginalName();
 
-            $imagePaths[] = $imageUrl;
+             $imagePath = $image->storeAs('public/products', $imageName);
+
+            $imageUrl = asset('storage/products/' . $imageName);
+
+             $imagePaths[] = $imageUrl;
+         }
+     }
+
+        foreach ($sizes as $size) {
+            $product = Products::create([
+                'name' => $validatedData['name'],
+                'slug' => $validatedData['slug'],
+                'status' => $validatedData['status'],
+                'stock_status' => $validatedData['stock_status'],
+                'category_id' => $subcategory->category_id,
+                'price' => $validatedData['price'],
+                'subcategory_id' => $validatedData['subcategory_id'],
+                'subcategory_abbreviation' => $subcategory->abbreviation,
+                'color' => $color,
+                'size' => $size,
+                'images' => json_encode($imagePaths),
+            ]);
+
+            $products[] = $product;
         }
     }
-      // Create a new product with image filenames
-       $product = Products::create([
-          'name' => $validatedData['name'],
-          'slug' => $validatedData['slug'],
-        //   'sku' => $validatedData['sku'],
-          'status' => $validatedData['status'],
-          'stock_status' => $validatedData['stock_status'],
 
-          'size' => json_encode($validatedData['size']), // Store as JSON array
-          'color' => json_encode($validatedData['color']),
-
-          'category_id' => $subcategory->category_id,
-          'price' => $validatedData['price'],
-          'subcategory_id' => $validatedData['subcategory_id'],
-          'subcategory_abbreviation' => $subcategory->abbreviation,
-          'images' => json_encode($imagePaths),
-      ]);
-
-     return response()->json([
-                'message' => 'DONE! Product Created Successfully',
-                'Product' => $product,
-            ]);
-    }
+    return response()->json([
+        'message' => 'DONE! Products Created Successfully',
+        'Products' => $products,
+    ]);
+}
 
 
     //get by product id
