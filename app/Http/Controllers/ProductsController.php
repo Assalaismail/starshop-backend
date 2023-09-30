@@ -30,7 +30,7 @@ class ProductsController extends ApiController
     }
 
 
-    //add new products
+//add new products
 public function addProducts(Request $request)
 {
     $validatedData = $request->validate([
@@ -61,9 +61,9 @@ public function addProducts(Request $request)
         ], 400);
     }
 
-    $products = [];
+    $parentProduct = null; // Initialize the parent product variable
 
-    foreach ($validatedData['variations'] as $variation) {
+    foreach ($validatedData['variations'] as $index => $variation) {
         $color = $variation['color'];
         $sizes = $variation['size'];
 
@@ -72,17 +72,42 @@ public function addProducts(Request $request)
 
         if (isset($variation['images'])) {
             foreach ($variation['images'] as $image) {
-             $imageName = $image->getClientOriginalName();
-
-             $imagePath = $image->storeAs('public/products', $imageName);
-
-            $imageUrl = asset('storage/products/' . $imageName);
-
-             $imagePaths[] = $imageUrl;
-         }
-     }
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('public/products', $imageName);
+                $imageUrl = asset('storage/products/' . $imageName);
+                $imagePaths[] = $imageUrl;
+            }
+        }
 
         foreach ($sizes as $size) {
+            $isVariation = 1; // By default, set is_variation to 1 for variations
+
+            if ($index === 0) {
+                // For the first variation with color, create the parent product with is_variation set to 0
+                if ($parentProduct === null) {
+                    $parentProduct = Products::create([
+                        'name' => $validatedData['name'],
+                        'slug' => $validatedData['slug'],
+                        'status' => $validatedData['status'],
+                        'stock_status' => $validatedData['stock_status'],
+                        'category_id' => $subcategory->category_id,
+                        'price' => $validatedData['price'],
+                        'subcategory_id' => $validatedData['subcategory_id'],
+                        'subcategory_abbreviation' => $subcategory->abbreviation,
+                        'color' => null, // Set color to null for the parent product
+                        'size' => null, // Set size to null for the parent product
+                        'images' => json_encode($imagePaths),
+                        'is_variation' => 0, // Set is_variation to 0 for the parent product
+                    ]);
+
+                    $products[] = $parentProduct;
+                }
+            } else {
+                // For variations other than the first one with color, set isVariation to 1
+                $isVariation = 1;
+            }
+
+            // Create the variation product
             $product = Products::create([
                 'name' => $validatedData['name'],
                 'slug' => $validatedData['slug'],
@@ -95,6 +120,7 @@ public function addProducts(Request $request)
                 'color' => $color,
                 'size' => $size,
                 'images' => json_encode($imagePaths),
+                'is_variation' => $isVariation,
             ]);
 
             $products[] = $product;
@@ -106,7 +132,6 @@ public function addProducts(Request $request)
         'Products' => $products,
     ]);
 }
-
 
     //get by product id
     public function getProductById($id)
@@ -138,11 +163,13 @@ public function addProducts(Request $request)
        // Retrieve subcategories associated with the found category
        $products = products::where('subcategory_id', $subcategory->id)
        ->where('status', 'published')
+       ->where('is_variation', '0')
        ->get();
 
        return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
       }
 
+      
       public function filterByPrice(Request $request)
       {
 
