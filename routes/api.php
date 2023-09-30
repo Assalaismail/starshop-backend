@@ -84,3 +84,6 @@ Route::post('/products', [ProductsController::class, 'addProducts']);
 
 
 Route::get('/Products/filter', [ProductsController::class, 'filterByPrice']);
+
+
+Route::get('/childs/{parentName}', [ProductsController::class, 'getChildProducts']);

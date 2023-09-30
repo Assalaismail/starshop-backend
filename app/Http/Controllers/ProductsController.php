@@ -12,6 +12,7 @@ use App\Models\attributes;
 
 class ProductsController extends ApiController
 {
+
      //get all products
     public function getAllProducts(Request $request)
     {
@@ -30,7 +31,7 @@ class ProductsController extends ApiController
     }
 
 
-//add new products
+     //add new products
 public function addProducts(Request $request)
 {
     $validatedData = $request->validate([
@@ -38,6 +39,7 @@ public function addProducts(Request $request)
         'slug' => 'required|string|max:255',
         'status' => 'required|string',
         'stock_status' => 'required|string',
+        'season_code' => 'required|string',
         'price' => 'required|numeric|min:0.01',
         'subcategory_id' => 'required|numeric|min:0.01',
 
@@ -90,6 +92,7 @@ public function addProducts(Request $request)
                         'slug' => $validatedData['slug'],
                         'status' => $validatedData['status'],
                         'stock_status' => $validatedData['stock_status'],
+                        'season_code' => $validatedData['season_code'],
                         'category_id' => $subcategory->category_id,
                         'price' => $validatedData['price'],
                         'subcategory_id' => $validatedData['subcategory_id'],
@@ -99,10 +102,9 @@ public function addProducts(Request $request)
                         'images' => json_encode($imagePaths),
                         'is_variation' => 0, // Set is_variation to 0 for the parent product
                     ]);
-
                     $products[] = $parentProduct;
                 }
-            } else {
+            }else {
                 // For variations other than the first one with color, set isVariation to 1
                 $isVariation = 1;
             }
@@ -113,6 +115,7 @@ public function addProducts(Request $request)
                 'slug' => $validatedData['slug'],
                 'status' => $validatedData['status'],
                 'stock_status' => $validatedData['stock_status'],
+                'season_code' => $validatedData['season_code'],
                 'category_id' => $subcategory->category_id,
                 'price' => $validatedData['price'],
                 'subcategory_id' => $validatedData['subcategory_id'],
@@ -122,7 +125,6 @@ public function addProducts(Request $request)
                 'images' => json_encode($imagePaths),
                 'is_variation' => $isVariation,
             ]);
-
             $products[] = $product;
         }
     }
@@ -133,12 +135,11 @@ public function addProducts(Request $request)
     ]);
 }
 
-    //get by product id
-    public function getProductById($id)
-    {
+     //get by product id
+public function getProductById($id)
+{
     $product = Products::findOrFail($id);
-
-    // Decode the JSON-encoded images
+     // Decode the JSON-encoded images
     $imagePaths = json_decode($product->images, true);
     $size = json_decode($product->size, true);
     $color = json_decode($product->color, true);
@@ -149,11 +150,11 @@ public function addProducts(Request $request)
         'size' => $size,
         'color' => $color,
     ]);
-   }
+}
 
        //get by subcategory's name
-       public function getProductBySubCategoryName($subcategoryName)
-       {
+public function getProductBySubCategoryName($subcategoryName)
+{
        // Find the category by its name
        $subcategory = subcategory::where('name', $subcategoryName)->first();
 
@@ -167,12 +168,35 @@ public function addProducts(Request $request)
        ->get();
 
        return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
-      }
+}
 
-      
-      public function filterByPrice(Request $request)
-      {
 
+
+public function getChildProducts($parentName)
+{
+    // Find all parent products with is_variation set to 0
+    $parentProducts = Products::where('is_variation', 0)
+    ->where('name', $parentName)
+    ->get();
+
+    $childProducts = [];
+
+    foreach ($parentProducts as $parentProduct) {
+        // Fetch child products with is_variation set to 1 and the same name as the parent product
+        $childProducts[$parentProduct->name] = Products::where('name', $parentName)
+            ->where('is_variation', 1)
+            ->get();
+    }
+
+    return response()->json([
+        'child_products' => $childProducts,
+    ]);
+}
+
+
+      //filter by price
+public function filterByPrice(Request $request)
+{
     $minPrice = $request->input('min_price', 0); // Default to 0 if not provided
     $maxPrice = $request->input('max_price', PHP_INT_MAX); // Default to the maximum possible value if not provided
 
@@ -185,6 +209,6 @@ public function addProducts(Request $request)
             return response()->json(['message' => 'No products found within the specified price range.']);
         }
         return $this->apiResponse($products, self::STATUS_OK, __('Response ok!'));
-       }
+}
 
 }
