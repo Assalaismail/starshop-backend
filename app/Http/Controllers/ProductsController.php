@@ -188,9 +188,8 @@ public function getChildProducts($parentName)
             ->get();
     }
 
-    return response()->json([
-        'child_products' => $childProducts,
-    ]);
+    return $this->apiResponse($childProducts, self::STATUS_OK, __('Response ok!'));
+
 }
 
 
