@@ -9,6 +9,8 @@ use App\Http\Controllers\SetAttributesController;
 use App\Http\Controllers\AttributesController;
 use App\Http\Controllers\CarouselController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\CountriesController;
+use App\Http\Controllers\StatesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +89,13 @@ Route::get('/Products/filter', [ProductsController::class, 'filterByPrice']);
 
 
 Route::get('/childs/{parentName}', [ProductsController::class, 'getChildProducts']);
+
+
+Route::get('/countries', [CountriesController::class, 'getAllCountries']);
+Route::post('/countries', [CountriesController::class, 'addCountry']);
+
+Route::get('/states', [StatesController::class, 'getAllStates']);
+Route::post('/states', [StatesController::class, 'addState']);
+
+
+Route::get('/states/{country_id}', [StatesController::class, 'getStateByCountryId']);

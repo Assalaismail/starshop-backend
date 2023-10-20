@@ -187,9 +187,7 @@ public function getChildProducts($parentName)
             ->where('is_variation', 1)
             ->get();
     }
-
     return $this->apiResponse($childProducts, self::STATUS_OK, __('Response ok!'));
-
 }
 
 
