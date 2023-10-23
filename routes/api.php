@@ -11,6 +11,7 @@ use App\Http\Controllers\CarouselController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CountriesController;
 use App\Http\Controllers\StatesController;
+use App\Http\Controllers\CouponCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,12 +91,16 @@ Route::get('/Products/filter', [ProductsController::class, 'filterByPrice']);
 
 Route::get('/childs/{parentName}', [ProductsController::class, 'getChildProducts']);
 
-
+/////////// Countries ///////////
 Route::get('/countries', [CountriesController::class, 'getAllCountries']);
 Route::post('/countries', [CountriesController::class, 'addCountry']);
 
+/////////// States ///////////
 Route::get('/states', [StatesController::class, 'getAllStates']);
 Route::post('/states', [StatesController::class, 'addState']);
-
-
 Route::get('/states/{country_id}', [StatesController::class, 'getStateByCountryId']);
+
+
+Route::get('/codes', [CouponCodeController::class, 'getAllCodes']);
+Route::post('/codes', [CouponCodeController::class, 'addCouponCode']);
+

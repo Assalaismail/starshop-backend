@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class couponCodes extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'code',
+        'value',
+        'type',
+        'type_option'
+    ];
 }
