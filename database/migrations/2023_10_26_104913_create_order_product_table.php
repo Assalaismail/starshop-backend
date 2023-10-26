@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCouponCodesTable extends Migration
+class CreateOrderProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateCouponCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('coupon_codes', function (Blueprint $table) {
+        Schema::create('order_product', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('code');
-            $table->string('value');
-            $table->string('type');
-            $table->string('type_option');
+            $table->string('order_id');
+            $table->string('quantity');
+            $table->string('price');
+            $table->string('product_id');
+            $table->string('product_name');
+            $table->string('weight');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateCouponCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coupon_codes');
+        Schema::dropIfExists('order_product');
     }
 }

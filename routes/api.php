@@ -12,6 +12,9 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CountriesController;
 use App\Http\Controllers\StatesController;
 use App\Http\Controllers\CouponCodeController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\orderAddressesController;
+use App\Http\Controllers\OrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,4 +106,15 @@ Route::get('/states/{country_id}', [StatesController::class, 'getStateByCountryI
 
 Route::get('/codes', [CouponCodeController::class, 'getAllCodes']);
 Route::post('/codes', [CouponCodeController::class, 'addCouponCode']);
+
+/////////// OrderAddress ///////////
+Route::get('/address', [orderAddressesController::class, 'getAllOrderAddress']);
+Route::post('/address', [orderAddressesController::class, 'orderAddress']);
+
+/////////// Order ///////////
+Route::post('/checkout', [OrdersController::class, 'checkout']);
+
+
+Route::post('/contact', [ContactController::class, 'sendContactForm']);
+
 
