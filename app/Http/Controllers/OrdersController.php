@@ -63,20 +63,12 @@ class OrdersController extends ApiController
 
         // Calculate the total order amount
         $totalAmount = 0;
-        $totalWeight = 0;
         $amount = 0;
         $discount = 0;
 
         $user_id = $request->input('user_id');
 
-        // Apply discount if coupon code is provided
-        $couponCode = $request->input('coupon_code');
-        if ($couponCode) {
-            $discount = $this->calculateDiscount($couponCode, $totalAmount);
-            $amount = $totalAmount - $discount;
-        } else {
-            $amount = $totalAmount;
-        }
+
 
         // Address
         $addresses = new orderAddresses();
@@ -101,7 +93,6 @@ class OrdersController extends ApiController
         $order = new Orders();
         $order->user_id = $user_id;
         $order->total = $totalAmount;
-        $order->coupon_code = $couponCode;
         $order->discount_amount = $discount;
         $order->status = $request->input('status', 'pending');
 
@@ -150,6 +141,7 @@ class OrdersController extends ApiController
         $payment->save();
 
         $order->payment_id = $payment->id;
+        $order->coupon_code = $couponCode;
         $order->amount = $amount;
         $order->discount_amount= $discount;
         $order->total=$total;
