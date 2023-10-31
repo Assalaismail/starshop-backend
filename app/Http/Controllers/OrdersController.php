@@ -27,6 +27,7 @@ class OrdersController extends ApiController
         if ($discountInfo) {
             if ($discountInfo->type_option === 'percentage') {
                 $discount = ($discountInfo->value / 100) * $amount;
+                $discount = round($discount, 2);
             }
         }
         return $discount;
@@ -67,8 +68,6 @@ class OrdersController extends ApiController
         $discount = 0;
 
         $user_id = $request->input('user_id');
-
-
 
         // Address
         $addresses = new orderAddresses();
@@ -115,10 +114,9 @@ class OrdersController extends ApiController
             // Update the quantity of the product in the products table
             $product->decrement('quantity', $productData['quantity']);
         } else {
-            // Handle insufficient quantity error, e.g., return an error response
             return response()->json(['message' => 'Insufficient quantity available for ' . $product->name], 400);
         }
-        }
+     }
 
          // Apply discount if coupon code is provided
          $couponCode = $request->input('coupon_code');
@@ -157,6 +155,7 @@ class OrdersController extends ApiController
 
         return response()->json([
             'message' => 'DONE! Order Created Successfully',
+            'order' => $order,
         ]);
     }
 }

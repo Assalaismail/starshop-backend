@@ -19,6 +19,5 @@ class couponCodes extends Model
         'end_date',
         'type',
         'type_option'
-
     ];
 }

@@ -105,6 +105,7 @@ Route::get('/states/{country_id}', [StatesController::class, 'getStateByCountryI
 
 
 Route::get('/codes', [CouponCodeController::class, 'getAllCodes']);
+Route::get('/codes/{code}', [CouponCodeController::class, 'getCouponByCodeName']);
 Route::post('/codes', [CouponCodeController::class, 'addCouponCode']);
 
 /////////// OrderAddress ///////////

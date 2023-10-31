@@ -12,7 +12,7 @@ class orders extends Model
     protected $fillable = [
         'user_id',
         'status',
-        'shipment_status',
+        'shipping_method',
         'amount',
         'due_amount',
         'total',

@@ -18,8 +18,8 @@ class CreateCouponCodesTable extends Migration
             $table->string('title');
             $table->string('code');
             $table->string('value');
-            $table->dateTime('start_date')->nullable();
-            $table->dateTime('end_date')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->string('type');
             $table->string('type_option');
             $table->timestamps();

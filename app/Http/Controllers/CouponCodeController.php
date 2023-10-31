@@ -26,6 +26,20 @@ class CouponCodeController extends ApiController
         return $this->apiResponse($codes, self::STATUS_OK, __('Response ok!'));
     }
 
+    //get Code By Name
+    public function getCouponByCodeName($code)
+    {
+        $coupon = couponCodes::where('code', $code)
+            ->where('end_date', '>=', now()) // Check for not expired coupons
+            ->first(); // Using 'first()' to get a single record
+
+        if (!$coupon) {
+            return $this->apiResponse(null, self::STATUS_NOT_FOUND, __('Coupon not found or expired.'));
+        }
+
+        return $this->apiResponse($coupon, self::STATUS_OK, __('Coupon found and valid.'));
+    }
+
     //add new Coupon code
     public function addCouponCode(Request $request)
     {
@@ -37,6 +51,8 @@ class CouponCodeController extends ApiController
             'value' => 'required',
             'type' => 'required',
             'type_option' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
         ]);
 
         $title = $request->input('title');
@@ -44,12 +60,16 @@ class CouponCodeController extends ApiController
         $value = $request->input('value');
         $type = $request->input('type');
         $type_option = $request->input('type_option');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
 
         $couponCodes->title = $title;
         $couponCodes->code = $code;
         $couponCodes->value = $value;
         $couponCodes->type = $type;
         $couponCodes->type_option = $type_option;
+        $couponCodes->start_date = $start_date;
+        $couponCodes->end_date = $end_date;
         $couponCodes->save();
 
         return response()->json([
